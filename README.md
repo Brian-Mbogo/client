@@ -2,6 +2,20 @@
 
 This project is a React app built with Vite and Tailwind CSS.
 
+## Quick quoted glossary
+
+> "Node.js is the runtime that lets you run JavaScript outside the browser."
+
+> "`npm` (Node Package Manager) is the tool used to install and manage project packages."
+
+> "`npx` runs a package command without you installing it globally."
+
+> "`package.json` is your project manifest: scripts, dependencies, and metadata."
+
+> "`package-lock.json` locks exact package versions so installs stay consistent."
+
+> "`node_modules` is the folder where npm installs project dependencies."
+
 ## File-by-file explanation (first to last)
 
 ### Root files
