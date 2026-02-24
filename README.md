@@ -16,6 +16,44 @@ This project is a React app built with Vite and Tailwind CSS.
 
 > "`node_modules` is the folder where npm installs project dependencies."
 
+## Components and how to structure them
+
+A React component is a reusable UI block. Your app is built by combining small components into bigger sections/pages.
+
+Basic rules:
+
+1. Keep components focused on one job.
+2. Pass data down with `props`.
+3. Keep state as close as possible to where it is used.
+4. Reuse shared UI (buttons, cards, inputs) instead of duplicating code.
+5. Split large components when they become hard to read.
+
+Suggested `src` structure as the project grows:
+
+```text
+src/
+|- assets/              # Images, icons, static files used by React
+|- components/          # Reusable UI components
+|  |- common/           # Generic components (Button, Card, Modal...)
+|  \- layout/           # Header, Footer, Navbar, Sidebar...
+|- pages/               # Page-level components (Home, About, Donate...)
+|- features/            # Feature modules (donation, auth, profile...)
+|- hooks/               # Custom hooks (useAuth, useFetch...)
+|- services/            # API calls and external service logic
+|- utils/               # Helper functions
+|- App.jsx              # Main app shell / routing entry
+|- index.css            # Global styles (Tailwind import + base styles)
+\- main.jsx             # App bootstrap (render to #root)
+```
+
+Practical pattern:
+
+1. `main.jsx` starts the app.
+2. `App.jsx` handles high-level layout and routes.
+3. `pages/*` represent screens.
+4. `components/*` are shared pieces used by pages/features.
+5. `services/*` handles API calls so UI components stay clean.
+
 ## File-by-file explanation (first to last)
 
 ### Root files
