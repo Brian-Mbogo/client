@@ -20,6 +20,25 @@ This project is a React app built with Vite and Tailwind CSS.
 
 A React component is a reusable UI block. Your app is built by combining small components into bigger sections/pages.
 
+## What components and hooks are
+
+- Components are functions that return JSX (UI). They let you split the interface into reusable pieces like `Navbar`, `DonationCard`, and `Footer`.
+- Hooks are special React functions (like `useState` and `useEffect`) that let components use state, side effects, and reusable logic.
+- Rule: hooks must be called at the top level of a React component or inside a custom hook, not inside conditions or loops.
+
+Simple example:
+
+```jsx
+import { useState } from 'react'
+
+function Counter() {
+  const [count, setCount] = useState(0)
+  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>
+}
+```
+
+In this example, `Counter` is the component and `useState` is the hook.
+
 Basic rules:
 
 1. Keep components focused on one job.
