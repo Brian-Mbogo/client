@@ -53,7 +53,7 @@ function App() {
   //     </p>
   //   </>
 
-  <h1>HELLO WORLD THIS IS MY FIRST REACT APP</h1>
+  <h1>HELLO WORLD THIS IS A REACT APP</h1>
 )
 }
 
