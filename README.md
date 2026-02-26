@@ -1,5 +1,7 @@
 # CharityMinds React Client
 
+Live demo (Vercel): https://client-dun-omega.vercel.app
+
 This project is a React app built with Vite and Tailwind CSS.
 
 ## Quick quoted glossary
