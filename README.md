@@ -227,3 +227,37 @@ npm run dev
 - `npm run build`: Create production build in `dist/`.
 - `npm run preview`: Preview the production build locally.
 - `npm run lint`: Run ESLint checks.
+
+
+## Default and named exports (modules)
+
+- `export default X` exports one main value from a file.
+- `import X from './file'` imports that default export (name can be changed by importer).
+- `export { X }` is a named export.
+- `import { X } from './file'` imports a named export (must match exact name and case).
+- You can have many named exports, but only one default export per file.
+
+Example:
+
+```jsx
+// App.jsx
+function App() {
+  return <h1>Hello world, this is React.</h1>
+}
+
+export default App
+// or: export { App }
+```
+
+```jsx
+// main.jsx
+import App from './App.jsx'      // for default export
+// import { App } from './App.jsx' // for named export
+```
+
+Common mistake:
+
+- `export { APP }` fails if your function is named `App` (JavaScript is case-sensitive).
+
+
+
