@@ -22,10 +22,16 @@ This project is a React app built with Vite and Tailwind CSS.
 
 A React component is a reusable UI block. Your app is built by combining small components into bigger sections/pages.
 
-## What components and hooks are
+## What components, hooks, JSX, state, props, routing, event handling, and rendering are
 
 - Components are functions that return JSX (UI). They let you split the interface into reusable pieces like `Navbar`, `DonationCard`, and `Footer`.
+- JSX is syntax that looks like HTML inside JavaScript and describes what the UI should render.
 - Hooks are special React functions (like `useState` and `useEffect`) that let components use state, side effects, and reusable logic.
+- State is component data that changes over time and triggers UI updates when updated.
+- Props are inputs passed from a parent component to a child component.
+- Routing maps URL paths (like `/`, `/about`, `/donate`) to page components, usually using `react-router-dom`.
+- Event handling means responding to user actions (click, submit, change) using handler functions like `onClick` and `onSubmit`.
+- Rendering is React turning component code into what appears on screen, then re-rendering when state or props change.
 - Rule: hooks must be called at the top level of a React component or inside a custom hook, not inside conditions or loops.
 
 Simple example:
