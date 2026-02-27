@@ -47,6 +47,29 @@ function Counter() {
 
 In this example, `Counter` is the component and `useState` is the hook.
 
+## JSX vs HTML: similarities and differences
+
+### Similarities
+
+| Topic | JSX | HTML |
+| --- | --- | --- |
+| Tags | Uses tags like `div`, `h1`, `p`, `button`. | Uses the same core tags for structure. |
+| Attributes | Supports attributes like `id`, `title`, `src`. | Supports attributes like `id`, `title`, `src`. |
+| Nesting | Elements can be nested inside each other. | Elements can be nested inside each other. |
+| UI structure | Describes what should appear in the UI. | Describes what should appear in the UI. |
+
+### Differences
+
+| Topic | JSX | HTML |
+| --- | --- | --- |
+| Nature | JavaScript syntax extension used in React. | Markup language interpreted by the browser. |
+| Class attribute | Uses `className`. | Uses `class`. |
+| Label attribute | Uses `htmlFor`. | Uses `for`. |
+| Dynamic values | Embeds JavaScript with `{}` (example: `{count}`). | No direct JavaScript expression embedding inside markup. |
+| Naming style | Uses camelCase for many props/events (`onClick`, `tabIndex`). | Uses lowercase attribute names in markup. |
+| Root structure | Components return one parent element or fragment `<>...</>`. | Documents can contain multiple top-level elements in normal structure. |
+| Build step | Compiled to JavaScript (for example by Vite/Babel). | Parsed directly as HTML by browsers. |
+
 Basic rules:
 
 1. Keep components focused on one job.

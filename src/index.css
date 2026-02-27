@@ -1,24 +1,7 @@
-/* Tailwind v4 changed the directive names:
-   - `@tailwind base` was replaced by an import of the "preflight" layer
-     (`@import "tailwindcss/preflight"`).
-   - `@tailwind components` has been removed entirely; utility classes go
-     directly under `@tailwind utilities` now.
-   The editor was flagging the old rules as errors, so we switch to the
-   recommended syntax. */
-
-/* normalize/modern-reset styles */
-@import "tailwindcss/preflight";
-
-/* all of Tailwind's utility classes */
-@tailwind utilities;
-/* Add any project-level custom styles below. Keep this file focused on
-   Tailwind layers; package.json contents don't belong here and were
-   accidentally pasted into this CSS file (that caused the red errors).
-
-   Example global rule (optional): */
+/* Tailwind v4 entrypoint */
+@import "tailwindcss";
 
 html, body {
   height: 100%;
 }
-
 
