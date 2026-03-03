@@ -1,286 +1,310 @@
 # CharityMinds React Client
 
-Live demo (Vercel): https://client-dun-omega.vercel.app
+Frontend client for the CharityMinds registration interface, built with React, Vite, and Tailwind CSS v4.
 
-This project is a React app built with Vite and Tailwind CSS.
+## Live Demo
+- https://client-dun-omega.vercel.app
 
-## Quick quoted glossary
+## 1) What this project currently does
 
-> "Node.js is the runtime that lets you run JavaScript outside the browser."
+This client currently renders one page:
+- `RegisterPage` (registration screen)
 
-> "`npm` (Node Package Manager) is the tool used to install and manage project packages."
+`App.jsx` mounts only that page for now:
+- Header
+- Registration form
+- Footer
 
-> "`npx` runs a package command without you installing it globally."
+No API integration is wired yet in this client. The form is currently presentational (UI-focused).
 
-> "`package.json` is your project manifest: scripts, dependencies, and metadata."
+## 2) Tech stack used
 
-> "`package-lock.json` locks exact package versions so installs stay consistent."
+- React 19
+- Vite 7
+- Tailwind CSS 4 (`@tailwindcss/vite`)
+- ESLint 9 (flat config)
 
-> "`node_modules` is the folder where npm installs project dependencies."
+## 3) Prerequisites
 
-## Components and how to structure them
+Install:
+- Node.js (LTS) from https://nodejs.org
+- npm (comes with Node.js)
 
-A React component is a reusable UI block. Your app is built by combining small components into bigger sections/pages.
+Check versions:
 
-## What components, hooks, JSX, state, props, routing, event handling, and rendering are
-
-- Components are functions that return JSX (UI). They let you split the interface into reusable pieces like `Navbar`, `DonationCard`, and `Footer`.
-- JSX is syntax that looks like HTML inside JavaScript and describes what the UI should render.
-- Hooks are special React functions (like `useState` and `useEffect`) that let components use state, side effects, and reusable logic.
-- State is component data that changes over time and triggers UI updates when updated.
-- Props are inputs passed from a parent component to a child component.
-- Routing maps URL paths (like `/`, `/about`, `/donate`) to page components, usually using `react-router-dom`.
-- Event handling means responding to user actions (click, submit, change) using handler functions like `onClick` and `onSubmit`.
-- Rendering is React turning component code into what appears on screen, then re-rendering when state or props change.
-- Rule: hooks must be called at the top level of a React component or inside a custom hook, not inside conditions or loops.
-
-Simple example:
-
-```jsx
-import { useState } from 'react'
-
-function Counter() {
-  const [count, setCount] = useState(0)
-  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>
-}
+```bash
+node -v
+npm -v
 ```
 
-In this example, `Counter` is the component and `useState` is the hook.
+## 4) Project setup: step-by-step with commands and what each step entailed
 
-## JSX vs HTML: similarities and differences
+This section explains the exact workflow typically used to reach this current setup.
 
-### Similarities
+### Step 1: Create workspace folders
 
-| Topic | JSX | HTML |
-| --- | --- | --- |
-| Tags | Uses tags like `div`, `h1`, `p`, `button`. | Uses the same core tags for structure. |
-| Attributes | Supports attributes like `id`, `title`, `src`. | Supports attributes like `id`, `title`, `src`. |
-| Nesting | Elements can be nested inside each other. | Elements can be nested inside each other. |
-| UI structure | Describes what should appear in the UI. | Describes what should appear in the UI. |
-
-### Differences
-
-| Topic | JSX | HTML |
-| --- | --- | --- |
-| Nature | JavaScript syntax extension used in React. | Markup language interpreted by the browser. |
-| Class attribute | Uses `className`. | Uses `class`. |
-| Label attribute | Uses `htmlFor`. | Uses `for`. |
-| Dynamic values | Embeds JavaScript with `{}` (example: `{count}`). | No direct JavaScript expression embedding inside markup. |
-| Naming style | Uses camelCase for many props/events (`onClick`, `tabIndex`). | Uses lowercase attribute names in markup. |
-| Root structure | Components return one parent element or fragment `<>...</>`. | Documents can contain multiple top-level elements in normal structure. |
-| Build step | Compiled to JavaScript (for example by Vite/Babel). | Parsed directly as HTML by browsers. |
-
-Basic rules:
-
-1. Keep components focused on one job.
-2. Pass data down with `props`.
-3. Keep state as close as possible to where it is used.
-4. Reuse shared UI (buttons, cards, inputs) instead of duplicating code.
-5. Split large components when they become hard to read.
-
-Suggested `src` structure as the project grows:
-
-```text
-src/
-|- assets/              # Images, icons, static files used by React
-|- components/          # Reusable UI components
-|  |- common/           # Generic components (Button, Card, Modal...)
-|  \- layout/           # Header, Footer, Navbar, Sidebar...
-|- pages/               # Page-level components (Home, About, Donate...)
-|- features/            # Feature modules (donation, auth, profile...)
-|- hooks/               # Custom hooks (useAuth, useFetch...)
-|- services/            # API calls and external service logic
-|- utils/               # Helper functions
-|- App.jsx              # Main app shell / routing entry
-|- index.css            # Global styles (Tailwind import + base styles)
-\- main.jsx             # App bootstrap (render to #root)
+```bash
+mkdir CharityMinds-React
+cd CharityMinds-React
+mkdir client server
+cd client
 ```
 
-Practical pattern:
+What this step entailed:
+- Created a monorepo-style root folder (`CharityMinds-React`)
+- Split frontend and backend concerns into `client` and `server`
+- Entered `client` to initialize the React app
 
-1. `main.jsx` starts the app.
-2. `App.jsx` handles high-level layout and routes.
-3. `pages/*` represent screens.
-4. `components/*` are shared pieces used by pages/features.
-5. `services/*` handles API calls so UI components stay clean.
+### Step 2: Scaffold the React app with Vite
 
-## File-by-file explanation (first to last)
+```bash
+npm create vite@latest .
+```
 
-### Root files
+What this step entailed:
+- Generated a Vite project in the current folder (`.`)
+- Selected:
+  - Framework: `React`
+  - Variant: `JavaScript`
+- Created starter files like `index.html`, `src/main.jsx`, `src/App.jsx`, `vite.config.js`, and `package.json`
 
-1. `.gitignore`  
-   Lists files and folders Git should ignore, including logs, `node_modules`, build output (`dist`), and editor/system files.
+### Step 3: Install project dependencies
 
-2. `eslint.config.js`  
-   ESLint flat config for JavaScript/JSX files. It enables recommended JS rules, React hooks rules, React refresh rules, and ignores `dist`.
+If dependencies were not auto-installed during scaffold:
 
-3. `index.html`  
-   Main HTML entry file. It contains `<div id="root"></div>` where React mounts, and loads `src/main.jsx`.
+```bash
+npm install
+```
 
-4. `package-lock.json`  
-   Auto-generated lockfile that pins exact dependency versions for consistent installs.
+What this step entailed:
+- Downloaded packages into `node_modules`
+- Created/updated `package-lock.json` to lock versions
 
-5. `package.json`  
-   Project metadata, scripts (`dev`, `build`, `lint`, `preview`), and dependencies/devDependencies (React, Vite, Tailwind, ESLint).
+### Step 4: Add Tailwind CSS v4 integration for Vite
 
-6. `README.md`  
-   Project documentation (this file).
+```bash
+npm install tailwindcss @tailwindcss/vite
+```
 
-7. `vite.config.js`  
-   Vite configuration file. It registers the React plugin and the Tailwind Vite plugin.
+What this step entailed:
+- Installed Tailwind runtime and Vite plugin
+- Enabled Tailwind in `vite.config.js` via:
+  - `import tailwindcss from '@tailwindcss/vite'`
+  - `plugins: [react(), tailwindcss()]`
+- Set `src/index.css` to:
 
-### `public/`
+```css
+@import "tailwindcss";
+```
 
-8. `public/vite.svg`  
-   Static Vite logo served directly from the public folder.
+### Step 5: Build the registration UI by componentizing
 
-### `src/`
+What this step entailed:
+- Broke the page into reusable components in `src/components/`:
+  - `Header.jsx`
+  - `RegisterForm.jsx`
+  - `Footer.jsx`
+- Created page composition file:
+  - `src/RegisterPage.jsx`
+- Wired the page in `src/App.jsx`:
+  - `return <RegisterPage />`
+- Used Tailwind utility classes for layout and styling
 
-9. `src/main.jsx`  
-   React entry point. It creates the root and renders `<App />` inside `StrictMode`.
+### Step 6: Run local development server
 
-10. `src/index.css`  
-    Global stylesheet entry. Currently imports Tailwind via `@import "tailwindcss";`.
+```bash
+npm run dev
+```
 
-11. `src/App.jsx`  
-    Main app component. Right now it is the default Vite React demo with a counter and logo links.
+What this step entailed:
+- Started Vite dev server (usually `http://localhost:5173`)
+- Enabled hot reload while editing files
 
-12. `src/App.css`  
-    Component-level styles for `App.jsx` (layout, logo animation, button/card spacing).
+### Step 7: Quality and production checks
 
-13. `src/assets/react.svg`  
-    React logo asset used by `App.jsx`.
+Lint:
 
-## Folder structure (mini tree)
+```bash
+npm run lint
+```
+
+Production build:
+
+```bash
+npm run build
+```
+
+Preview production build locally:
+
+```bash
+npm run preview
+```
+
+What this step entailed:
+- `lint` checks JavaScript/JSX code quality
+- `build` outputs optimized files into `dist/`
+- `preview` serves the built app locally for final verification
+
+## 5) Commands that are run in this project (reference)
+
+From `package.json`:
+
+- `npm run dev`
+  - Runs: `vite`
+  - Purpose: start development server
+
+- `npm run build`
+  - Runs: `vite build`
+  - Purpose: create production-ready assets in `dist/`
+
+- `npm run lint`
+  - Runs: `eslint .`
+  - Purpose: run static code checks
+
+- `npm run preview`
+  - Runs: `vite preview`
+  - Purpose: preview the production build locally
+
+## 6) Current folder structure
 
 ```text
 client/
 |- public/
-|  \- vite.svg
+|  \- assets/images/logo.png
 |- src/
 |  |- assets/
-|  |  \- react.svg
+|  |  |- react.svg
+|  |  \- vite.svg
+|  |- components/
+|  |  |- Button.jsx
+|  |  |- Footer.jsx
+|  |  |- Header.jsx
+|  |  |- RegisterForm.jsx
 |  |- App.css
 |  |- App.jsx
 |  |- index.css
+|  |- RegisterPage.jsx
 |  \- main.jsx
-|- .gitignore
 |- eslint.config.js
 |- index.html
-|- package-lock.json
 |- package.json
-|- README.md
+|- tailwind.config.js
 \- vite.config.js
 ```
 
-- `public/`: Static files served as-is.
-- `src/`: React source code, styles, and local assets.
+## 7) File-by-file explanation (core runtime files)
 
-## Steps that lead here (video flow you shared)
+- `src/main.jsx`
+  - React entrypoint
+  - Mounts `<App />` into `#root`
 
-1. In terminal, go to the place where you want the project folder to live.
-2. Create the main project and subfolders:
-   - `mkdir CharityMinds-React`
-   - `cd CharityMinds-React`
-   - `mkdir client server`
-3. Go into the React app folder:
-   - `cd client`
-4. Scaffold React with Vite in the current folder:
-   - `npm create vite@latest .`
-5. During prompts, choose:
-   - Install latest version: `Y`
-   - Framework: `React`
-   - Variant: `JavaScript`
-   - Rollup option: `No` (default)
-   - Install dependencies and start: `Yes`
-6. Install Tailwind packages (inside `client`):
-   - `npm install -D tailwindcss postcss autoprefixer`
-7. Update `client/vite.config.js` to include Tailwind/PostCSS plugin setup (as shown in the tutorial).
-8. Update `client/src/index.css` with Tailwind directives:
-   - `@tailwind base;`
-   - `@tailwind components;`
-   - `@tailwind utilities;`
-9. Start development server (inside `client`):
-   - `npm run dev`
-10. Open the local URL from terminal (usually `http://localhost:5173`).
+- `src/App.jsx`
+  - Root app component
+  - Currently renders only `RegisterPage`
 
-Note: this repository currently uses Tailwind v4 style config (`@tailwindcss/vite` + `@import "tailwindcss";`), which is slightly different from the older PostCSS-style setup above.
+- `src/RegisterPage.jsx`
+  - Page composition layer
+  - Renders `Header`, `RegisterForm`, `Footer`
 
-## Setup process (from zero)
+- `src/components/Header.jsx`
+  - Top navigation section
+  - Uses logo from `/public/assets/images/logo.png`
 
-1. Install Node.js (LTS) from `https://nodejs.org`.
-2. Confirm installation:
-   - `node -v`
-   - `npm -v`
-3. (Optional) Confirm VS Code terminal command:
-   - `code --version`
-4. Open terminal and go to the project:
-   - `cd "C:\Users\( F r E a K )\gomycode\CharityMinds-React\client"`
-5. Install dependencies:
-   - `npm install`
-6. Start development server:
-   - `npm run dev`
-7. Open the local app URL shown in terminal (usually `http://localhost:5173`).
-8. Open the project in VS Code (if not already open):
-   - `code .`
+- `src/components/RegisterForm.jsx`
+  - Main registration form UI
+  - Includes text/date/password inputs, terms checkbox, submit button
 
-## Open this project in VS Code from terminal
+- `src/components/Footer.jsx`
+  - Bottom page footer
 
-1. Open a terminal (PowerShell or Command Prompt).
-2. Move into this project folder:  
-   `cd "C:\Users\( F r E a K )\gomycode\CharityMinds-React\client"`
-3. Start VS Code in the current folder:  
-   `code .`
+- `src/index.css`
+  - Tailwind entry (`@import "tailwindcss";`)
+  - Global `html, body` height rules
 
-What these commands do:
+- `vite.config.js`
+  - Enables React plugin and Tailwind Vite plugin
 
-- `cd ...` changes the terminal's current working directory to your project folder.
-- `code .` tells VS Code to open the current directory (`.`), so the files appear in the Explorer.
+- `tailwind.config.js`
+  - Declares content scan paths (`index.html`, `src/**/*.{js,jsx}`)
 
-## Quick start
+- `eslint.config.js`
+  - ESLint flat config for JS/JSX + React hooks + Vite refresh plugin
+
+## 8) How to run this project now (clean machine)
 
 ```bash
+cd "C:\Users\( F r E a K )\gomycode\CharityMinds-React\client"
 npm install
 npm run dev
 ```
 
-## Useful scripts
+Then open the URL printed in terminal (commonly `http://localhost:5173`).
 
-- `npm run dev`: Start local development server.
-- `npm run build`: Create production build in `dist/`.
-- `npm run preview`: Preview the production build locally.
-- `npm run lint`: Run ESLint checks.
+## 9) Suggested day-to-day workflow
 
+1. Start work:
 
-## Default and named exports (modules)
-
-- `export default X` exports one main value from a file.
-- `import X from './file'` imports that default export (name can be changed by importer).
-- `export { X }` is a named export.
-- `import { X } from './file'` imports a named export (must match exact name and case).
-- You can have many named exports, but only one default export per file.
-
-Example:
-
-```jsx
-// App.jsx
-function App() {
-  return <h1>Hello world, this is React.</h1>
-}
-
-export default App
-// or: export { App }
+```bash
+npm run dev
 ```
 
-```jsx
-// main.jsx
-import App from './App.jsx'      // for default export
-// import { App } from './App.jsx' // for named export
+2. Before pushing code:
+
+```bash
+npm run lint
+npm run build
 ```
 
-Common mistake:
+3. Optional final sanity check:
 
-- `export { APP }` fails if your function is named `App` (JavaScript is case-sensitive).
+```bash
+npm run preview
+```
 
+## 10) Known scope and next implementation targets
 
+Current scope:
+- UI-only registration page
+- Static links in header/footer
+- No API calls yet
 
+Likely next steps:
+- Add React Router routes (`/register`, `/login`, `/dashboard`)
+- Add controlled form state and validation
+- Connect submit action to backend API in `server`
+- Add reusable UI components (Button/Input/FormField patterns)
+
+## 11) Changelog-style implementation timeline
+
+This timeline summarizes the practical build order used for the current UI.
+
+1. Project scaffolded with Vite (React + JavaScript).
+   - Command run: `npm create vite@latest .`
+
+2. Dependencies installed for local development.
+   - Command run: `npm install`
+
+3. Tailwind CSS v4 integrated with Vite plugin.
+   - Command run: `npm install tailwindcss @tailwindcss/vite`
+   - Files updated: `vite.config.js`, `src/index.css`
+
+4. Registration layout split into reusable components.
+   - Created: `src/components/Header.jsx`
+   - Created: `src/components/RegisterForm.jsx`
+   - Created: `src/components/Footer.jsx`
+   - Created: `src/RegisterPage.jsx`
+
+5. Root app switched to render registration page composition.
+   - Updated: `src/App.jsx` to return `<RegisterPage />`
+
+6. Static branding asset connected in navigation.
+   - Used: `public/assets/images/logo.png` in `Header.jsx`
+
+7. Local verification run in development mode.
+   - Command run: `npm run dev`
+
+8. Quality and production checks prepared.
+   - Commands run when validating changes:
+     - `npm run lint`
+     - `npm run build`
+     - `npm run preview`

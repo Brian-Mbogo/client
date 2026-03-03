@@ -1,12 +1,8 @@
-import { Button } from './components/Button.jsx'
+import RegisterPage from './RegisterPage.jsx'
 
 function App() {
-  // return <h1>Hello world, this is React.</h1>
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-start pt-8">
-      <Button />
-    </main>
-  )
+  // Render only the registration page for now.
+  return <RegisterPage />
 }
 
 export default App
