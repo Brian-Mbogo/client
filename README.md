@@ -105,7 +105,7 @@ What this step entailed:
   - `RegisterForm.jsx`
   - `Footer.jsx`
 - Created page composition file:
-  - `src/RegisterPage.jsx`
+  - `src/pages/RegisterPage.jsx`
 - Wired the page in `src/App.jsx`:
   - `return <RegisterPage />`
 - Used Tailwind utility classes for layout and styling
@@ -180,10 +180,11 @@ client/
 |  |  |- Footer.jsx
 |  |  |- Header.jsx
 |  |  |- RegisterForm.jsx
+|  |- pages/
+|  |  \- RegisterPage.jsx
 |  |- App.css
 |  |- App.jsx
 |  |- index.css
-|  |- RegisterPage.jsx
 |  \- main.jsx
 |- eslint.config.js
 |- index.html
@@ -202,7 +203,7 @@ client/
   - Root app component
   - Currently renders only `RegisterPage`
 
-- `src/RegisterPage.jsx`
+- `src/pages/RegisterPage.jsx`
   - Page composition layer
   - Renders `Header`, `RegisterForm`, `Footer`
 
@@ -292,7 +293,7 @@ This timeline summarizes the practical build order used for the current UI.
    - Created: `src/components/Header.jsx`
    - Created: `src/components/RegisterForm.jsx`
    - Created: `src/components/Footer.jsx`
-   - Created: `src/RegisterPage.jsx`
+   - Created: `src/pages/RegisterPage.jsx`
 
 5. Root app switched to render registration page composition.
    - Updated: `src/App.jsx` to return `<RegisterPage />`

@@ -1,4 +1,4 @@
-import RegisterPage from './RegisterPage.jsx'
+import RegisterPage from './pages/RegisterPage.jsx'
 
 function App() {
   // Render only the registration page for now.
