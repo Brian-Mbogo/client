@@ -1,10 +1,8 @@
-// Header extracted from charity-minds-2 Register page and converted to JSX.
-export default function Header() {
+export default function DashboardHeader() {
   return (
     <header className="bg-blue-400">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <div className="flex items-center space-x-2">
-          {/* In React, static public files are referenced from /public via absolute web path. */}
           <img className="mr-2 h-9 w-auto" src="/assets/images/logo.png" alt="Charity Minds logo" />
           <span className="font-bold">CHARITY MINDS</span>
         </div>
@@ -21,7 +19,12 @@ export default function Header() {
             </a>
           </li>
           <li>
-            <a href="/dashboard" className="text-red-700">
+            <a href="/register" className="text-red-700">
+              Register
+            </a>
+          </li>
+          <li>
+            <a href="/dashboard" className="font-semibold text-white underline underline-offset-4">
               Dashboard
             </a>
           </li>

@@ -20,7 +20,7 @@ export default function LoginHeader() {
             </a>
           </li>
           <li>
-            <a href="#" className="text-red-700">
+            <a href="/dashboard" className="text-red-700">
               Dashboard
             </a>
           </li>

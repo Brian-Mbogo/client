@@ -1,5 +1,6 @@
 import LoginPage from './pages/loginpage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import DashboardPage from './pages/DashboardPage.jsx'
 
 function App() {
   const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/'
@@ -10,6 +11,10 @@ function App() {
 
   if (normalizedPath.toLowerCase() === '/register') {
     return <RegisterPage />
+  }
+
+  if (normalizedPath.toLowerCase() === '/dashboard') {
+    return <DashboardPage />
   }
 
   return (
