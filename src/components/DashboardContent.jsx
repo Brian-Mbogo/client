@@ -1,79 +1,13 @@
-const users = [
-  {
-    id: 1,
-    firstName: 'Jane',
-    lastName: 'Wangeci',
-    email: 'jane.wangeci@gmail.com',
-    username: 'janed',
-    phone: '+254700123456',
-    dob: '1998-04-12',
-    gender: 'Female',
-  },
-  {
-    id: 2,
-    firstName: 'John',
-    lastName: 'Kamau',
-    email: 'john.kamau@gmail.com',
-    username: 'johnny',
-    phone: '+254701987654',
-    dob: '1995-07-23',
-    gender: 'Male',
-  },
-  {
-    id: 3,
-    firstName: 'Mary',
-    lastName: 'Wirimu',
-    email: 'mary.wirimu@gmail.com',
-    username: 'mwirimu',
-    phone: '+254702345678',
-    dob: '2000-01-30',
-    gender: 'Female',
-  },
-  {
-    id: 4,
-    firstName: 'David',
-    lastName: 'Otieno',
-    email: 'david.otieno@gmail.com',
-    username: 'davo',
-    phone: '+254703456789',
-    dob: '1993-11-05',
-    gender: 'Male',
-  },
-  {
-    id: 5,
-    firstName: 'Faith',
-    lastName: 'Mutiso',
-    email: 'faith.mutiso@gmail.com',
-    username: 'faithy',
-    phone: '+254704567890',
-    dob: '1999-09-15',
-    gender: 'Female',
-  },
-  {
-    id: 6,
-    firstName: 'Peter',
-    lastName: 'Ndungu',
-    email: 'peter.ndungu@gmail.com',
-    username: 'pndungu',
-    phone: '+254705123789',
-    dob: '1997-05-09',
-    gender: 'Male',
-  },
-  {
-    id: 7,
-    firstName: 'Angela',
-    lastName: 'Mutua',
-    email: 'angela.mutua@gmail.com',
-    username: 'angiem',
-    phone: '+254706987321',
-    dob: '2002-10-20',
-    gender: 'Female',
-  },
-]
+import { useState } from 'react'
+import { getRegisteredUsers } from '../services/registeredUsersStorage.js'
 
 export default function DashboardContent() {
+  // Read saved users once when this component starts.
+  const [users] = useState(() => getRegisteredUsers())
+
   const stats = [
-    { value: 10, label: 'Registered Users' },
+    // This now uses real saved users count.
+    { value: users.length, label: 'Registered Users' },
     { value: 7, label: 'Children Forms Recorded' },
     { value: 56, label: 'Visitors' },
     { value: 3, label: 'Donations' },
@@ -118,18 +52,26 @@ export default function DashboardContent() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
-                <tr key={user.id} className="border-b border-gray-100 odd:bg-white even:bg-gray-50/50">
-                  <td className="px-3 py-2">{user.id}</td>
-                  <td className="px-3 py-2">{user.firstName}</td>
-                  <td className="px-3 py-2">{user.lastName}</td>
-                  <td className="px-3 py-2">{user.email}</td>
-                  <td className="px-3 py-2">{user.username}</td>
-                  <td className="px-3 py-2">{user.phone}</td>
-                  <td className="px-3 py-2">{user.dob}</td>
-                  <td className="px-3 py-2">{user.gender}</td>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-3 py-4 text-center text-gray-500">
+                    No registered users yet. Register a user first.
+                  </td>
                 </tr>
-              ))}
+              ) : (
+                users.map((user, index) => (
+                  <tr key={user.id} className="border-b border-gray-100 odd:bg-white even:bg-gray-50/50">
+                    <td className="px-3 py-2">{index + 1}</td>
+                    <td className="px-3 py-2">{user.firstName}</td>
+                    <td className="px-3 py-2">{user.lastName}</td>
+                    <td className="px-3 py-2">{user.email}</td>
+                    <td className="px-3 py-2">{user.username}</td>
+                    <td className="px-3 py-2">{user.phone}</td>
+                    <td className="px-3 py-2">{user.dob}</td>
+                    <td className="px-3 py-2">{user.gender}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

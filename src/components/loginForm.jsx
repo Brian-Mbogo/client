@@ -1,14 +1,70 @@
+import { useState } from 'react'
 import LoginButton from './loginButton.jsx'
+import { loginUser } from '../services/authService.js'
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Login form extracted from charity-minds-2 Login page and converted to JSX.
 export default function LoginForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setErrorMessage('')
+    setSuccessMessage('')
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const email = String(formData.get('email') || '').trim()
+    const password = String(formData.get('password') || '')
+
+    if (!email || !password) {
+      setErrorMessage('Email and password are required.')
+      return
+    }
+
+    if (!EMAIL_REGEX.test(email)) {
+      setErrorMessage('Please enter a valid email address.')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+      const response = await loginUser({ 'email': email, 'password': password })
+      const message =
+        typeof response === 'object' && response !== null && response.message ? response.message : 'Login successful.'
+
+      setSuccessMessage(message)
+      window.setTimeout(() => {
+        window.location.assign('/dashboard')
+      }, 900)
+    } catch (error) {
+      setErrorMessage(error.message || 'Unable to login right now.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <section className="flex flex-grow items-center justify-center px-6 py-8" aria-label="Login form section">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold">Login</h1>
 
-        {/* JSX changes from HTML: class -> className, for -> htmlFor, and self-closing inputs. */}
-        <form className="space-y-4" action="#" method="post" autoComplete="on">
+        {errorMessage ? (
+          <p className="mb-4 rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700" role="alert">
+            {errorMessage}
+          </p>
+        ) : null}
+
+        {successMessage ? (
+          <p className="mb-4 rounded border border-green-200 bg-green-50 p-2 text-sm text-green-700" role="status">
+            {successMessage}
+          </p>
+        ) : null}
+
+        <form className="space-y-4" onSubmit={handleSubmit} autoComplete="on">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -52,7 +108,7 @@ export default function LoginForm() {
             </a>
           </div>
 
-          <LoginButton />
+          <LoginButton isSubmitting={isSubmitting} />
         </form>
 
         <div className="mt-4 text-center text-gray-600">
