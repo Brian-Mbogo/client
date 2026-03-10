@@ -1,119 +1,93 @@
 import { useState } from 'react'
-import LoginButton from './loginButton.jsx'
-import { loginUser } from '../services/authService.js'
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-// Login form extracted from charity-minds-2 Login page and converted to JSX.
 export default function LoginForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [message, setMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    setErrorMessage('')
-    setSuccessMessage('')
+  function handleSubmit(e) {
+    e.preventDefault()
+    setMessage('')
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
-    const email = String(formData.get('email') || '').trim()
-    const password = String(formData.get('password') || '')
+    // Get users from localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
 
-    if (!email || !password) {
-      setErrorMessage('Email and password are required.')
-      return
-    }
+    // Find user with matching email and password
+    const user = users.find(u => u.email === email && u.password === password)
 
-    if (!EMAIL_REGEX.test(email)) {
-      setErrorMessage('Please enter a valid email address.')
-      return
-    }
+    if (user) {
+      // Save logged in user info
+      localStorage.setItem('loggedInUser', JSON.stringify(user))
+      
+      setMessage('Login successful! Redirecting to dashboard...')
+      setIsSuccess(true)
 
-    try {
-      setIsSubmitting(true)
-      const response = await loginUser({ 'email': email, 'password': password })
-      const message =
-        typeof response === 'object' && response !== null && response.message ? response.message : 'Login successful.'
-
-      setSuccessMessage(message)
-      window.setTimeout(() => {
-        window.location.assign('/dashboard')
-      }, 900)
-    } catch (error) {
-      setErrorMessage(error.message || 'Unable to login right now.')
-    } finally {
-      setIsSubmitting(false)
+      // Redirect to dashboard after 1 second
+      setTimeout(() => {
+        window.location.href = '/dashboard'
+      }, 1000)
+    } else {
+      setMessage('Invalid email or password!')
+      setIsSuccess(false)
     }
   }
 
   return (
-    <section className="flex flex-grow items-center justify-center px-6 py-8" aria-label="Login form section">
+    <section className="flex flex-grow items-center justify-center px-6 py-8">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
         <h1 className="mb-6 text-center text-2xl font-bold">Login</h1>
 
-        {errorMessage ? (
-          <p className="mb-4 rounded border border-red-200 bg-red-50 p-2 text-sm text-red-700" role="alert">
-            {errorMessage}
+        {/* Show message if there's one */}
+        {message && (
+          <p className={`mb-4 rounded p-2 text-sm ${isSuccess ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            {message}
           </p>
-        ) : null}
+        )}
 
-        {successMessage ? (
-          <p className="mb-4 rounded border border-green-200 bg-green-50 p-2 text-sm text-green-700" role="status">
-            {successMessage}
-          </p>
-        ) : null}
-
-        <form className="space-y-4" onSubmit={handleSubmit} autoComplete="on">
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
-              id="email"
-              name="email"
               type="email"
               required
-              placeholder="mbogo456@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
 
+          {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
             <input
-              id="password"
-              name="password"
               type="password"
               required
-              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
 
-          <div className="flex items-center justify-between">
-            <label htmlFor="rememberMe" className="flex items-center space-x-2 text-sm text-gray-700">
-              <input
-                id="rememberMe"
-                name="rememberMe"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-2 focus:ring-blue-400"
-              />
-              <span>Remember me</span>
-            </label>
-            <a href="#" className="text-sm text-blue-500 hover:underline">
-              Forgot password?
-            </a>
+          {/* Remember Me */}
+          <div className="flex items-center">
+            <input type="checkbox" id="remember" className="h-4 w-4" />
+            <label htmlFor="remember" className="ml-2 text-sm text-gray-600">Remember me</label>
           </div>
 
-          <LoginButton isSubmitting={isSubmitting} />
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600"
+          >
+            Login
+          </button>
         </form>
 
         <div className="mt-4 text-center text-gray-600">
           <p>
-            Don&apos;t have an account?{' '}
+            Don't have an account?{' '}
             <a href="/register" className="text-blue-500 hover:underline">
               Register
             </a>
@@ -123,3 +97,4 @@ export default function LoginForm() {
     </section>
   )
 }
+

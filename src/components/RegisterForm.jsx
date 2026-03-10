@@ -1,65 +1,221 @@
+import { useState } from 'react'
 
-import React from 'react';
+export default function RegisterForm() {
+  // Simple state for form fields
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    phone: '',
+    dob: '',
+    gender: '',
+    password: '',
+    confirmPassword: ''
+  })
 
-function RegisterForm() {
+  const [message, setMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  // Handle input changes
+  function handleChange(e) {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  // Handle form submission
+  function handleSubmit(e) {
+    e.preventDefault()
+    setMessage('')
+
+    // Check if passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setMessage('Passwords do not match!')
+      setIsSuccess(false)
+      return
+    }
+
+    // Get existing users from localStorage
+    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+
+    // Check if email already exists
+    const emailExists = existingUsers.some(user => user.email === formData.email)
+    if (emailExists) {
+      setMessage('Email already registered!')
+      setIsSuccess(false)
+      return
+    }
+
+    // Add new user (don't store password in plain text in real apps!)
+    const newUser = { ...formData, id: Date.now() }
+    existingUsers.push(newUser)
+
+    // Save to localStorage
+    localStorage.setItem('users', JSON.stringify(existingUsers))
+
+    // Show success and redirect
+    setMessage('Registration successful! Redirecting to login...')
+    setIsSuccess(true)
+
+    // Redirect to login after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/login'
+    }, 2000)
+  }
+
   return (
-    <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" action="#" method="post" autoComplete="on">
-      {/* Personal identity fields */}
-      <div> 
-        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-        <input id="firstName" name="firstName" type="text" required placeholder="Brian"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />
-      </div>
-      <div>
-        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-        <input id="lastName" name="lastName" type="text" required placeholder="Mbogo"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />    
-      </div>
-      {/* Account identity fields */} 
-      <div> 
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-        <input id="username" name="username" type="text" required placeholder="Mbogo123"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />    
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-        <input id="email" name="email" type="email" required placeholder="mbogo456@gmail.com"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />  
-      </div>
-      {/* Contact and profile fields */}
-      <div> 
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-        <input id="phone" name="phone" type="tel" required placeholder="+254 700 000 000"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />    
-      </div>
-      <div>
-        <label htmlFor="dob" className="block text-sm font-medium text-gray-700">Date of Birth</label>      
-        <input id="dob" name="dob" type="date" required
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />
-      </div>
-      {/* Password fields */}
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-        <input id="password" name="password" type="password" required placeholder="Enter password"
+    <section className="flex flex-grow items-center justify-center px-6 py-8">
+      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+        <h1 className="mb-6 text-center text-2xl font-bold">Register</h1>
 
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />
+        {/* Show message if there's one */}
+        {message && (
+          <p className={`mb-4 rounded p-2 text-sm ${isSuccess ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+            {message}
+          </p>
+        )}
+
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          {/* First Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">First Name</label>
+            <input
+              name="firstName"
+              type="text"
+              required
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Last Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Last Name</label>
+            <input
+              name="lastName"
+              type="text"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Username */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <input
+              name="username"
+              type="text"
+              required
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              name="email"
+              type="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+            <input
+              name="phone"
+              type="tel"
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Date of Birth */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+            <input
+              name="dob"
+              type="date"
+              required
+              value={formData.dob}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Gender</label>
+            <select
+              name="gender"
+              required
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              name="password"
+              type="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <input
+              name="confirmPassword"
+              type="password"
+              required
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600"
+          >
+            Register
+          </button>
+        </form>
+
+        <div className="mt-4 text-center text-gray-600">
+          <p>
+            Already have an account?{' '}
+            <a href="/login" className="text-blue-500 hover:underline">
+              Login
+            </a>
+          </p>
+        </div>
       </div>
-      <div> 
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Confirm password"
-          className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-blue-400 outline-none" />
-      </div>
-      {/* Agreement checkbox */}
-      <div className="sm:col-span-2 flex items-center space-x-2"> 
-        <input id="terms" name="terms" type="checkbox" required
-          className="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-400" />
-        <label htmlFor="terms" className="text-sm text-gray-700">
-          I accept the <a href="terms.html" className="text-blue-500 hover:underline">Terms and Conditions</a>
-        </label>
-      </div>
-    </form>
-  );
+    </section>
+  )
 }
 
-
-export default RegisterForm;  
