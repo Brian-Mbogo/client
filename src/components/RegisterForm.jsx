@@ -16,6 +16,7 @@ export default function RegisterForm() {
 
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Handle input changes
   function handleChange(e) {
@@ -26,41 +27,52 @@ export default function RegisterForm() {
   // Handle form submission
   function handleSubmit(e) {
     e.preventDefault()
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
     setMessage('')
 
-    // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
-      setMessage('Passwords do not match!')
+    try {
+      // Check if passwords match
+      if (formData.password !== formData.confirmPassword) {
+        setMessage('Passwords do not match!')
+        setIsSuccess(false)
+        setIsSubmitting(false)
+        return
+      }
+
+      // Get existing users from localStorage
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
+
+      // Check if email already exists
+      const emailExists = existingUsers.some(user => user.email === formData.email)
+      if (emailExists) {
+        setMessage('Email already registered!')
+        setIsSuccess(false)
+        setIsSubmitting(false)
+        return
+      }
+
+      // Add new user (don't store password in plain text in real apps!)
+      const newUser = { ...formData, id: Date.now() }
+      existingUsers.push(newUser)
+
+      // Save to localStorage
+      localStorage.setItem('users', JSON.stringify(existingUsers))
+
+      // Show success and redirect
+      setMessage('Registration successful! Redirecting to login...')
+      setIsSuccess(true)
+
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 2000)
+    } catch {
+      setMessage('Something went wrong. Please try again.')
       setIsSuccess(false)
-      return
+      setIsSubmitting(false)
     }
-
-    // Get existing users from localStorage
-    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]')
-
-    // Check if email already exists
-    const emailExists = existingUsers.some(user => user.email === formData.email)
-    if (emailExists) {
-      setMessage('Email already registered!')
-      setIsSuccess(false)
-      return
-    }
-
-    // Add new user (don't store password in plain text in real apps!)
-    const newUser = { ...formData, id: Date.now() }
-    existingUsers.push(newUser)
-
-    // Save to localStorage
-    localStorage.setItem('users', JSON.stringify(existingUsers))
-
-    // Show success and redirect
-    setMessage('Registration successful! Redirecting to login...')
-    setIsSuccess(true)
-
-    // Redirect to login after 2 seconds
-    setTimeout(() => {
-      window.location.href = '/login'
-    }, 2000)
   }
 
   return (
@@ -75,7 +87,7 @@ export default function RegisterForm() {
           </p>
         )}
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit} aria-busy={isSubmitting}>
           {/* First Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">First Name</label>
@@ -200,9 +212,10 @@ export default function RegisterForm() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600"
+            disabled={isSubmitting}
+            className="w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-blue-500"
           >
-            Register
+            {isSubmitting ? 'Registering...' : 'Register'}
           </button>
         </form>
 
